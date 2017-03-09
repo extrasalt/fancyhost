@@ -28,6 +28,7 @@ func main() {
 				display: flex;
 				justify-content: center;
 				align-items:center;
+				height:100%;
 			}
 			</style>
 		</head>
