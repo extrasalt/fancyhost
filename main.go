@@ -12,10 +12,7 @@ import (
 
 func main() {
 	h, _ := os.Hostname()
-	rdr := strings.NewReader(h)
-	hash := sha256.New()
-	io.Copy(hash, rdr)
-	color := hex.EncodeToString(hash.Sum(nil))[:6]
+	color := generateHexString(h, 6)
 
 	htmltempl := `
 		<head>
@@ -37,11 +34,18 @@ func main() {
 		</body>
 		`
 	html := fmt.Sprintf(htmltempl, color, h)
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
 		w.Write([]byte(html))
 	})
-
 	http.ListenAndServe(":8000", nil)
+}
+
+func generateHexString(s string, size int) string {
+
+	rdr := strings.NewReader(s)
+	hash := sha256.New()
+	io.Copy(hash, rdr)
+	hexString := hex.EncodeToString(hash.Sum(nil))[:size]
+
+	return hexString
 }
